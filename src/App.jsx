@@ -1,11 +1,18 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { BookOpen, Library, Settings, Play, Pause, Rewind, FastForward, Edit3, X, Clock, ChevronRight, ChevronLeft, BookMarked, UploadCloud, Loader2, List, FileText, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, collection, onSnapshot, doc, setDoc, deleteDoc } from 'firebase/firestore';
 
-// Dinamik bekleme süresi
-const calculateDelay = (word, baseWpm) => {
-  if (!word) return 0;
-  const baseDelayMs = (60 / baseWpm) * 1000;
-  let multiplier = 1;
+// 1. BURAYA FIREBASE PANELİNDEN ALDIĞIN AYARLARI YAPIŞTIR:
+const firebaseConfig = {
+  apiKey: "AIzaSyBHgN52ilukU_J8SUJmj1JK4_-pyhaOA3M",
+  authDomain: "reader-c44f0.firebaseapp.com",
+  projectId: "reader-c44f0",
+  storageBucket: "reader-c44f0.firebasestorage.app",
+  messagingSenderId: "494949473242",
+  appId: "1:494949473242:web:8e8ed51b3b6239ea69fee3",
+  measurementId: "G-JE37YBSX6V"
+};
 
   const cleanWordLength = word.replace(/[.,!?;\-]/g, '').length;
   if (cleanWordLength > 10) multiplier += 0.4;
